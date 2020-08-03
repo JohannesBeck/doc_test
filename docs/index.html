@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uniform B-spline &#8212; Uniform B-spline 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="uniform-b-spline">
+<h1>Uniform B-spline<a class="headerlink" href="#uniform-b-spline" title="Permalink to this headline">¶</a></h1>
+<p>An implementation of a uniform B-spline from
+<span class="math notranslate nohighlight">\(\mathbb{R}^n \rightarrow \mathbb{R}^m\)</span>. Uniform means, that
+the knot vector of the B-spline is equally distributed. Using such a
+knot vector makes the computation much more efficient, as the basis can
+be precomputed.</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="d-rarr-1d-spline">
+<h3>1D → 1D spline<a class="headerlink" href="#d-rarr-1d-spline" title="Permalink to this headline">¶</a></h3>
+<p>Let’s start with a B-spline
+<span class="math notranslate nohighlight">\(f\colon \mathbb{R} \rightarrow \mathbb{R}\)</span>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ubs</span><span class="o">::</span><span class="n">UniformBSpline</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;&gt;</span> <span class="n">spline</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The first template argument is the value type, the second one is the
+degree of the spline, the third one is the input type and the last one
+the output type. This means, that we have defined a uniform B-spline of
+degree 3 which takes a double as input and a double as output. The last
+template parameter is the container of control points.</p>
+<p>As this is a pretty common spline, there is a template alias for it:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ubs</span><span class="o">::</span><span class="n">UniformBSpline11d</span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span> <span class="n">spline</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>As we have used the default constructor for our spline, the spline is
+initialized with the minimum number of control points all set to zero.
+In addition the spline is in the range between zero and one. Now lets
+set the control points.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span> <span class="n">controlPoints</span><span class="p">{</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">};</span>
+<span class="n">spline</span><span class="p">.</span><span class="n">setControlPoints</span><span class="p">(</span><span class="n">controlPoints</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Now we have defined a spline which is a straight line with a slope of
+two. One can change the lower bound and the upper bound of the spline
+like this:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">spline</span><span class="p">.</span><span class="n">setBounds</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Now the range of the spline is between -2 and 5.</p>
+<p>The spline can be evaluated by calling evaluate as follows:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">val0</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">evaluate</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+<span class="kt">double</span> <span class="n">val1</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">evaluate</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This evaluates the spline at the positions zero and one.</p>
+<p>The derivative can be calculated using the derivative function:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">deriv1</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">derivative</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="kt">double</span> <span class="n">deriv2</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">derivative</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The first statement evaluates the first derivative at zero, the second
+the second derivative at one.</p>
+<p>Also the smoothness of the spline can be evaluated. For the used
+definition of the smoothness see UniformBSpline::smoothness.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">smoothness</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">smoothness</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>This computes the smoothness using the first derivative.</p>
+</div>
+<div class="section" id="d-rarr-3d-eigen-spline">
+<h3>1D → 3D Eigen spline<a class="headerlink" href="#d-rarr-3d-eigen-spline" title="Permalink to this headline">¶</a></h3>
+<p>Now lets look at a spline
+<span class="math notranslate nohighlight">\(f\colon \mathbb{R} \rightarrow \mathbb{R}^3\)</span>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ubs</span><span class="o">::</span><span class="n">UniformBSpline</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3d</span><span class="p">,</span> <span class="n">EigenAlignedVec</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3d</span><span class="o">&gt;&gt;</span> <span class="n">spline</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The definition is very similar to the one dimensional case but the
+output is now a Eigen::Vector3d.</p>
+<p>As we still have a one dimensional input, spline evaluation, derivatives
+and smoothness works similar, the only change is its output type:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3d</span> <span class="n">val0</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">evaluate</span><span class="p">(</span><span class="mf">0.0</span><span class="p">);</span>
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3d</span> <span class="n">val1</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">evaluate</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3d</span> <span class="n">deriv1</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">derivative</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3d</span> <span class="n">deriv2</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">derivative</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3d</span> <span class="n">smoothness</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">smoothness</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">();</span>
+</pre></div>
+</div>
+<p>The smoothness is now divided into each dimension. To get the smoothness
+of the whole spline, those values needs to be summed together.</p>
+</div>
+<div class="section" id="d-rarr-1d-eigen-spline">
+<h3>2D → 1D Eigen spline<a class="headerlink" href="#d-rarr-1d-eigen-spline" title="Permalink to this headline">¶</a></h3>
+<p>Now lets look at a spline
+<span class="math notranslate nohighlight">\(f\colon \mathbb{R}^2 \rightarrow \mathbb{R}\)</span>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ubs</span><span class="o">::</span><span class="n">UniformBSpline</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">,</span> <span class="kt">double</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">MatrixXd</span><span class="o">&gt;</span> <span class="n">spline</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The input type is now Eigen::Vector2d and the output type is double. As
+the control points must be on a two dimensional grid, we use an
+Eigen::Matrix here.</p>
+<p>To evaluate the spline two parameters are needed:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">val</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">{</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">});</span>
+</pre></div>
+</div>
+<p>This would evaluate the spline at (0, 0). This can be shortened by using
+brace initialization of Eigen::Vector2d:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">val</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">evaluate</span><span class="p">({</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">});</span>
+</pre></div>
+</div>
+<p>For the derivatives we now have partial derivatives. One can specify the
+derivative for each dimension separately.</p>
+<p>This calculates the expression
+<span class="math notranslate nohighlight">\(\frac{\partial f(x, y)}{\partial x}\)</span>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">deriv10</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">derivative</span><span class="p">({</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">});</span>
+</pre></div>
+</div>
+<p>This calculates the expression
+<span class="math notranslate nohighlight">\(\frac{\partial^2 f(x, y)}{\partial x \partial y}\)</span>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span> <span class="n">deriv11</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">derivative</span><span class="p">({</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">});</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id1">
+<h3>2D → 3D Eigen spline<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>Not lets look at a spline
+<span class="math notranslate nohighlight">\(f\colon \mathbb{R}^2 \rightarrow \mathbb{R}^3\)</span>.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ubs</span><span class="o">::</span><span class="n">UniformBSpline</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector2d</span><span class="p">,</span> <span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3d</span><span class="p">,</span> <span class="n">ubs</span><span class="o">::</span><span class="n">EigenAlignedMultiArray</span><span class="o">&lt;</span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3d</span><span class="p">,</span> <span class="mi">2</span><span class="o">&gt;&gt;</span>
+    <span class="n">spline</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>So we have used an Eigen::Vector2d as input, an Eigen::Vector3d as
+output and a boost::multi_array as control points container. As the
+definition of such splines are getting pretty lengthy, the alias
+declaration “EigenUniformBSpline” exists:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">ubs</span><span class="o">::</span><span class="n">EigenUniformBSpline</span><span class="o">&lt;</span><span class="kt">double</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="o">&gt;</span> <span class="n">splineS</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>To evaluate a spline, one need a two dimensional input and receives a
+three dimensional output:</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="n">Eigen</span><span class="o">::</span><span class="n">Vector3d</span> <span class="n">val</span> <span class="o">=</span> <span class="n">spline</span><span class="p">.</span><span class="n">evaluate</span><span class="p">({</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">});</span>
+</pre></div>
+</div>
+<p>Derivatives and smoothness is similar to the other cases.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Uniform B-spline</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Johannes Beck.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
